@@ -1,7 +1,14 @@
 import EnergyProductionCards from "./EnergyProductionCards";
 import Tab from "../../../components/Tab";
 import { useState } from "react";
+import React from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
+// import getSolarUnitById from "@/lib/api/Solar-Unit";
+// import { Button } from "@/components/ui/button";
+// import { getSolarUnitById } from "../../../lib/api/Solar-Unit";
+import { getEnergyGenerationRecordsBySolarUnit } from "../../../lib/api/energy-generation-record";
+import { useGetEnergyGenerationRecordsBySolarUnitIdQuery } from "../../../lib/redux/query";
 
 const SolarEnergyProduction = () => {
   const energyProductionData = [
@@ -42,7 +49,35 @@ const SolarEnergyProduction = () => {
     }
   });
 
-  // console.log(filteredEnergyProductionData);
+  const { data, isError, error, isLoading } = 
+  useGetEnergyGenerationRecordsBySolarUnitIdQuery("6904c17029536e48fe9315cf");
+
+  console.log("Redux Toolkit Query data:", data);
+ 
+  // const handleGetData = async () => {
+  //   try {
+  //     const data = await getEnergyGenerationRecordsBySolarUnit(
+  //       "68e92f395405d661df7c07b5"
+  //     );
+  //     console.log("Energy records:", data);
+  //   } catch (e) {
+  //     console.error("Failed to fetch energy records:", e);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // Fetch once on mount
+  //   (async () => {
+  //     try {
+  //       const data = await getEnergyGenerationRecordsBySolarUnit(
+  //         "68e92f395405d661df7c07b5"
+  //       );
+  //       console.log("Energy records:", data);
+  //     } catch (e) {
+  //       console.error("Failed to fetch energy records:", e);
+  //     }
+  //   })();
+  // }, []);
 
   return (
     <section className="px-12 font-[Inter] py-6">
@@ -62,6 +97,9 @@ const SolarEnergyProduction = () => {
           );
         })}
       </div>
+      {/* <div className="mt-4">
+        <Button onClick={handleGetData}>get data</Button>
+      </div> */}
       <EnergyProductionCards
         energyProductionData={filteredEnergyProductionData}
       />
