@@ -4,6 +4,7 @@ import { useState } from "react";
 import React from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { toDate, subDays } from "date-fns";
 // import getSolarUnitById from "@/lib/api/Solar-Unit";
 // import { Button } from "@/components/ui/button";
 // import { getSolarUnitById } from "../../../lib/api/Solar-Unit";
@@ -50,34 +51,27 @@ const SolarEnergyProduction = () => {
   });
 
   const { data, isError, error, isLoading } = 
-  useGetEnergyGenerationRecordsBySolarUnitIdQuery("6904c17029536e48fe9315cf");
+  useGetEnergyGenerationRecordsBySolarUnitIdQuery("6905bfb65ff604b96e34cd30");
+  if (isLoading) {
+    return <div>Loading....</div>;
+  }
+  if (isError) {
+    return <div>Error: {String(error?.message || 'Unknown error')}</div>;
+  }
+  if (data) {
+  // console.log("Redux Toolkit Query data:", data);
 
-  console.log("Redux Toolkit Query data:", data);
- 
-  // const handleGetData = async () => {
-  //   try {
-  //     const data = await getEnergyGenerationRecordsBySolarUnit(
-  //       "68e92f395405d661df7c07b5"
-  //     );
-  //     console.log("Energy records:", data);
-  //   } catch (e) {
-  //     console.error("Failed to fetch energy records:", e);
-  //   }
-  // };
+  
+const records = data.map((el) => ({
+  ...el,
+  timestamp: new Date(el.timestamp),
+}));
 
-  // useEffect(() => {
-  //   // Fetch once on mount
-  //   (async () => {
-  //     try {
-  //       const data = await getEnergyGenerationRecordsBySolarUnit(
-  //         "68e92f395405d661df7c07b5"
-  //       );
-  //       console.log("Energy records:", data);
-  //     } catch (e) {
-  //       console.error("Failed to fetch energy records:", e);
-  //     }
-  //   })();
-  // }, []);
+const sevenDaysAgo = subDays(new Date(), 7);
+
+const filteredData = records.filter((el) => el.timestamp >= sevenDaysAgo);
+// console.log(filteredData);
+}
 
   return (
     <section className="px-12 font-[Inter] py-6">
