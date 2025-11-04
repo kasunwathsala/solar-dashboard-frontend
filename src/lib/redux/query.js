@@ -10,9 +10,19 @@ export const Api = createApi({
     getEnergyGenerationRecordsBySolarUnitId: build.query({
       query: (id) => `/energy-generation-records/solar-unit/${id}`,
     }),
+    // Supports object input with optional grouping
+    getEnergyGenerationRecordsBySolarUnit: build.query({
+      query: ({ id, groupBy } = {}) => {
+        const qs = groupBy ? `?groupBy=${encodeURIComponent(groupBy)}` : '';
+        return `/energy-generation-records/solar-unit/${id}${qs}`;
+      },
+    }),
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetEnergyGenerationRecordsBySolarUnitIdQuery } = Api
+export const { 
+  useGetEnergyGenerationRecordsBySolarUnitIdQuery,
+  useGetEnergyGenerationRecordsBySolarUnitQuery,
+} = Api
