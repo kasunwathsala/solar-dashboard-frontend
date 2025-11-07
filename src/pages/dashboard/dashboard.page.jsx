@@ -5,7 +5,7 @@ const DashboardPage = () => {
     <>
       {/* <Navigation /> */}
       <main>
-        <h1>Dashboard</h1>
+        <h1>Dashboard 123</h1>
       </main>
     </>
   );

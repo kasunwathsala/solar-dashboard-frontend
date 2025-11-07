@@ -16,11 +16,14 @@ const SolarEnergyProduction = () => {
   const { data, isLoading, isError, error } =
     useGetEnergyGenerationRecordsBySolarUnitQuery({
       id: "6905bfb65ff604b96e34cd30",
-      groupBy: "date",
+      // Remove groupBy to get individual records, not aggregated data
+      // groupBy: "date",
     });
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {String(error?.message || "Unknown error")}</div>;
+
+  console.log("API Response:", data);
 
   // Normalize to array regardless of envelope
   const arr = Array.isArray(data)
@@ -31,10 +34,15 @@ const SolarEnergyProduction = () => {
     ? data.data
     : [];
 
+  console.log("Normalized array:", arr, "Length:", arr.length);
+
   // Group by day key and sum energy
   const dayTotals = new Map(); // yyyy-MM-dd -> { day, date, production, hasAnomaly, ts }
   for (const el of arr) {
-    const rawDate = el?._id?.date ?? el?.date ?? el?.timestamp ?? null;
+    console.log("Processing element:", el);
+    // For individual records, use timestamp directly
+    const rawDate = el?.timestamp ?? el?.date ?? null;
+    console.log("Raw date:", rawDate);
     let parsed = null;
     if (rawDate) {
       try {
@@ -45,14 +53,9 @@ const SolarEnergyProduction = () => {
     }
     if (!parsed || isNaN(parsed.getTime())) continue;
     const key = format(parsed, "yyyy-MM-dd");
-    const energy =
-      Number(
-        el?.totalEnergy ??
-          el?.energyGenerated ??
-          el?.energy ??
-          el?.value ??
-          0
-      ) || 0;
+    // For individual records, use energyGenerated field
+    const energy = Number(el?.energyGenerated ?? el?.totalEnergy ?? el?.energy ?? 0) || 0;
+    console.log("Energy value:", energy, "from energyGenerated:", el?.energyGenerated);
     const prev = dayTotals.get(key) ?? {
       day: format(parsed, "EEE"),
       date: format(parsed, "MMM d"),
@@ -63,6 +66,7 @@ const SolarEnergyProduction = () => {
     prev.production += energy;
     prev.hasAnomaly = prev.hasAnomaly || Boolean(el?.hasAnomaly);
     dayTotals.set(key, prev);
+    console.log("Updated day total for", key, ":", prev);
   }
 
   // Build exactly 7 cards: latest available day + previous 6, zero-fill gaps
@@ -90,12 +94,30 @@ const SolarEnergyProduction = () => {
         });
       }
     }
+  } else {
+    // If no API data, show last 7 days with 0 production
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = subDays(today, i);
+      sevenDays.push({
+        day: format(d, "EEE"),
+        date: format(d, "MMM d"),
+        production: 0,
+        hasAnomaly: false,
+      });
+    }
   }
+
+  console.log("Day totals map:", dayTotals);
+  console.log("Seven days data:", sevenDays);
 
   // Filter by tab selection
   const filtered = sevenDays.filter((el) =>
     selectedTab === "all" ? true : selectedTab === "anomaly" ? el.hasAnomaly : false
   );
+
+  console.log("Filtered data:", filtered);
+  console.log("Selected tab:", selectedTab);
 
   return (
     <section className="px-12 font-[Inter] py-6">
