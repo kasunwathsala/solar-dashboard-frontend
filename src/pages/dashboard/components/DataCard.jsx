@@ -52,7 +52,7 @@ const DataCard = ({ data, isLoading, isError, error, title = "Data Overview" }) 
                 <h3 className="text-xs text-gray-500 font-medium ">
                   {format(toDate(el._id.date), "MMM d")}
                 </h3>
-                <p className="text-lg font-bold text-foreground">
+                <p className="text-lg font-bold text-blue-600">
                   {el.totalEnergy} kWh
                 </p>
               </div>
