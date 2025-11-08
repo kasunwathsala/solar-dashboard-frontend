@@ -1,5 +1,6 @@
 import React from "react";
-import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
+import { Home, Inbox, Calendar, Search, Settings,LayoutDashboard,TriangleAlert,ChartSpline } from "lucide-react";
+
 import {
   Sidebar,
   SidebarProvider,
@@ -13,30 +14,22 @@ import {
 
 const items = [
   {
-    title: "Home",
+    title: "Dashboard",
     url: "/",
-    icon: Home,
+    icon: LayoutDashboard,
   },
   {
-    title: "Inbox",
+    title: "Anomaly",
     url: "#",
-    icon: Inbox,
+    icon: TriangleAlert ,
   },
   {
-    title: "Calendar",
+    title: "Analytics",
     url: "#",
-    icon: Calendar,
+    icon: ChartSpline ,
   },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  
+  
 ];
 
 export function AppSidebar() {
@@ -44,7 +37,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="px-4 py-2">
-          <h2 className="text-lg font-semibold">Application</h2>
+          <h2 className="text-lg font-semibold">Aleora</h2>
         </div>
       </SidebarHeader>
       <SidebarContent>
