@@ -1,7 +1,9 @@
 import { Link } from "react-router";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { Button } from "@/components/ui/button";
 
 const Navigation = () => {
-  const user = "JD";
+  
   /**
    * Only JS expressions are allowed in return statement => js code that evaluates to a value
    * Function calls
@@ -40,6 +42,7 @@ const Navigation = () => {
 
       <div className={"flex items-center gap-12"}>
         <div className={"flex items-center gap-3 px-3 py-2"}>
+          <SignedIn>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -58,23 +61,39 @@ const Navigation = () => {
             <path d="M8 17v-3" />
           </svg>
           {/* <span className="font-[Inter] text-sm font-medium">Dashboard</span> */}
+          
           <Link to="/dashboard" className="font-[Inter] text-sm font-medium">Dashboard</Link>
+          </SignedIn>
           {/* <a href="/dashboard" className="font-[Inter] text-sm font-medium">Dashboard</a> */}
         </div>
         <div className={"flex items-center gap-2"}>
-          <div
-            className={
-              "w-8 h-8 rounded-full bg-blue-400 flex justify-center items-center"
-            }
-          >
-            <span className="font-[Inter] text-sm font-medium text-white">
-              {user}
-            </span>
+          <SignedOut>
+            <Button asChild>
+              <Link
+                to="/sign-in"
+                className={"flex items-center gap-3 px-3 py-2"}
+              >
+                Sign In
+              </Link>
+            </Button>
+            <Button asChild variant={"outline"}>
+              <Link
+                to="/sign-up"
+                className={"flex items-center gap-3 px-3 py-2"}
+              >
+                Sign Up
+              </Link>
+            </Button>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          
             
           </div>
-          <span className="font-[Inter] text-sm font-medium">Aelora</span>
+          {/* <span className="font-[Inter] text-sm font-medium">Aelora</span> */}
         </div>
-      </div>
+      
     </nav>
   );
 };

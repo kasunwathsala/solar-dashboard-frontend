@@ -11,6 +11,8 @@ import { Provider } from 'react-redux'
 import MainLayout from "./layouts/main.layout.jsx";
 import DashboardLayout from "./layouts/dashboard.layout.jsx";
 import { ClerkProvider } from '@clerk/clerk-react'
+import SignInPage from "./pages/auth/sign-in-page";
+import SignUpPage from "./pages/auth/sign-up-page";
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -26,6 +28,8 @@ createRoot(document.getElementById("root")).render(
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
         <Routes>
           <Route element={<RootLayout />}>
+              <Route path="sign-in" element={<SignInPage />} />
+              <Route path="sign-up" element={<SignUpPage />} />
             {/* meka danne layout file eka hadanawa nam pamanai */}
             <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
