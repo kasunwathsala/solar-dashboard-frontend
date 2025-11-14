@@ -13,6 +13,7 @@ import DashboardLayout from "./layouts/dashboard.layout.jsx";
 import { ClerkProvider } from '@clerk/clerk-react'
 import SignInPage from "./pages/auth/sign-in-page";
 import SignUpPage from "./pages/auth/sign-up-page";
+import ProtectedLayout from "./layouts/protected.layout";
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -34,8 +35,11 @@ createRoot(document.getElementById("root")).render(
             <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
             </Route>
-            <Route element={<DashboardLayout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
+            
+            <Route element={<ProtectedLayout />}>
+              <Route element={<DashboardLayout />}>
+                <Route path="/dashboard" element={<DashboardPage />} />
+              </Route>
             </Route>
           </Route>
         </Routes>
