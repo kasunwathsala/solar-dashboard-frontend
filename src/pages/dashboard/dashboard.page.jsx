@@ -2,8 +2,11 @@ import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query
 import DataCard from "./components/DataCard";
 import DataChart from "./components/DataChart";
 import { format, toDate } from "date-fns";
+import { useUser } from "@clerk/clerk-react";
 
 const DashboardPage = () => {
+  const {user} = useUser();
+  console.log("Dashboard user:", user);
   // Use same API approach as home page - get individual records without groupBy
   const solarUnitId = "6905bfb65ff604b96e34cd30"; // Example solar unit ID
   
@@ -84,7 +87,7 @@ const DashboardPage = () => {
   if (isError) {
     return (
       <main className="mt-4">
-        <h1 className="text-4xl font-bold text-foreground">Alice's House</h1>
+        <h1 className="text-4xl font-bold text-foreground">{user?.firstName}'s House</h1>
         <div className="mt-8 text-red-500">Error loading data: {error?.message || "Unknown error"}</div>
       </main>
     );
@@ -92,7 +95,7 @@ const DashboardPage = () => {
 
   return (
     <main className="mt-4">
-      <h1 className="text-4xl font-bold text-foreground">Alice's House</h1>
+      <h1 className="text-4xl font-bold text-foreground">{user?.firstName || 'User'}'s House</h1>
       <p className="text-gray-600 mt-2">Welcome back to your Solar Energy Production Dashboard</p>
       <div className="mt-8">
         <DataCard
