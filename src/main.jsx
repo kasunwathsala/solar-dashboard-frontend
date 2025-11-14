@@ -14,6 +14,8 @@ import { ClerkProvider } from '@clerk/clerk-react'
 import SignInPage from "./pages/auth/sign-in-page";
 import SignUpPage from "./pages/auth/sign-up-page";
 import ProtectedLayout from "./layouts/protected.layout";
+import AdminPage from "./pages/admin/admin.page.jsx";
+import AuthorizedLayout from "./layouts/authorized.layout.jsx";
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -40,6 +42,10 @@ createRoot(document.getElementById("root")).render(
               <Route element={<DashboardLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
               </Route>
+            </Route>
+
+            <Route element={<AuthorizedLayout />}>
+              <Route path="/admin/dashboard" element={<AdminPage />} />
             </Route>
           </Route>
         </Routes>
