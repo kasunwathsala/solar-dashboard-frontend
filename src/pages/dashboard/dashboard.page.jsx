@@ -5,12 +5,13 @@ import { format, toDate } from "date-fns";
 
 const DashboardPage = () => {
   // Use same API approach as home page - get individual records without groupBy
-  const { data, isLoading, isError, error } =
-    useGetEnergyGenerationRecordsBySolarUnitQuery({
-      id: "6905bfb65ff604b96e34cd30",
-      // Remove groupBy to get individual records for better processing
-    });
-
+  const solarUnitId = "6905bfb65ff604b96e34cd30"; // Example solar unit ID
+  
+  const { data, isLoading, isError, error } = useGetEnergyGenerationRecordsBySolarUnitQuery({
+    id: solarUnitId,
+    // Remove groupBy to get individual records for better processing
+  });
+  
   console.log("Dashboard API Response:", data);
 
   // Normalize to array regardless of envelope (same as home page)
@@ -95,19 +96,21 @@ const DashboardPage = () => {
       <p className="text-gray-600 mt-2">Welcome back to your Solar Energy Production Dashboard</p>
       <div className="mt-8">
         <DataCard
-          data={processedData}
-          isLoading={isLoading}
-          isError={isError}
-          error={error}
+          solarUnitId={solarUnitId}
+          // data={processedData}
+          // isLoading={isLoading}
+          // isError={isError}
+          // error={error}
           title="Last 7 Days Energy Production"
         />
       </div>
       <div className="mt-8">
         <DataChart
-          data={processedData}
-          isLoading={isLoading}
-          isError={isError}
-          error={error}
+          // data={processedData}
+          // isLoading={isLoading}
+          // isError={isError}
+          // error={error}
+          solarUnitId={solarUnitId}
         />
       </div>
     </main>

@@ -12,8 +12,8 @@ export const Api = createApi({
     }),
     // Supports object input with optional grouping
     getEnergyGenerationRecordsBySolarUnit: build.query({
-      query: ({ id, groupBy } = {}) => {
-        const qs = groupBy ? `?groupBy=${encodeURIComponent(groupBy)}` : '';
+      query: ({ id, groupBy, limit } = {}) => {
+        const qs = groupBy ? `?groupBy=${encodeURIComponent(groupBy)}&limit=${encodeURIComponent(limit)}` : '';
         return `/energy-generation-records/solar-unit/${id}${qs}`;
       },
     }),

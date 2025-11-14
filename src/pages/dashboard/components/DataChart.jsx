@@ -14,9 +14,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
 
-const DataCard = ({ data, isLoading, isError, error }) => {
+const DataChart = ({ solarUnitId }) => {
+  
   const [selectedRange, setSelectedRange] = useState("7");
+
+  const { data, isLoading, isError, error } =
+      useGetEnergyGenerationRecordsBySolarUnitQuery({
+        id: solarUnitId,
+        groupBy: "date",
+        limit: 7,
+        // Remove groupBy to get individual records for better processing
+      });
 
   const handleRangeChange = (range) => {
     setSelectedRange(range);
@@ -132,4 +142,4 @@ const DataCard = ({ data, isLoading, isError, error }) => {
   );
 };
 
-export default DataCard;
+export default DataChart;
