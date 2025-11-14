@@ -10,7 +10,7 @@ import { store } from './lib/redux/store'
 import { Provider } from 'react-redux'
 import MainLayout from "./layouts/main.layout.jsx";
 import DashboardLayout from "./layouts/dashboard.layout.jsx";
-import { ClerkProvider } from '@clerk/react-router'
+import { ClerkProvider } from '@clerk/clerk-react'
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
