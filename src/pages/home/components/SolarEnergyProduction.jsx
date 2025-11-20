@@ -3,9 +3,12 @@ import EnergyProductionCards from "./EnergyProductionCards";
 import Tab from "@/components/Tab";
 import { useSelector } from "react-redux";
 import { toDate, subDays, format } from "date-fns";
-import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
+import { useGetEnergyGenerationRecordsBySolarUnitQuery, useGetSolarUnitByClerkUserIdQuery } from "@/lib/redux/query";
+import { useUser } from "@clerk/clerk-react";
 
 const SolarEnergyProduction = () => {
+  const { user } = useUser();
+  
   const tabs = [
     { label: "All", value: "all" },
     { label: "Anomaly", value: "anomaly" },
@@ -13,15 +16,32 @@ const SolarEnergyProduction = () => {
 
   const selectedTab = useSelector((state) => state.ui.selectedHomeTab);
 
+  // Extract user ID properly to avoid [object Object] serialization  
+  const userId = user?.id;
+  console.log("Home page user ID:", userId, "Type:", typeof userId);
+  
+  // Get user-specific solar unit
+  const { data: solarUnit, isLoading: isLoadingSolarUnit, isError: isErrorSolarUnit } = useGetSolarUnitByClerkUserIdQuery(
+    userId,
+    { skip: !userId }
+  );
+
+  // Get energy generation records for user's solar unit
   const { data, isLoading, isError, error } =
     useGetEnergyGenerationRecordsBySolarUnitQuery({
-      id: "6905bfb65ff604b96e34cd30",
-      // Remove groupBy to get individual records, not aggregated data
-      // groupBy: "date",
+      id: solarUnit?._id,
+    }, {
+      skip: !solarUnit?._id
     });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoadingSolarUnit || isLoading) return <div>Loading...</div>;
+  if (isErrorSolarUnit) return <div>Error: Solar unit not found</div>;
   if (isError) return <div>Error: {String(error?.message || "Unknown error")}</div>;
+  
+  // Don't render if solar unit is not loaded
+  if (!solarUnit?._id) {
+    return <div>No solar unit found for user</div>;
+  }
 
   console.log("API Response:", data);
 
@@ -82,14 +102,14 @@ const SolarEnergyProduction = () => {
         sevenDays.push({
           day: found.day,
           date: found.date,
-          production: found.production,
+          production: Math.round(found.production * 10) / 10, // Round to 1 decimal
           hasAnomaly: found.hasAnomaly,
         });
       } else {
         sevenDays.push({
           day: format(d, "EEE"),
           date: format(d, "MMM d"),
-          production: 0,
+          production: 0.0, // Show as decimal
           hasAnomaly: false,
         });
       }
@@ -102,7 +122,7 @@ const SolarEnergyProduction = () => {
       sevenDays.push({
         day: format(d, "EEE"),
         date: format(d, "MMM d"),
-        production: 0,
+        production: 0.0, // Show as decimal
         hasAnomaly: false,
       });
     }

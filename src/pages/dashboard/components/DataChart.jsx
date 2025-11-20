@@ -17,28 +17,56 @@ import {
 import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
 
 const DataChart = ({ solarUnitId }) => {
+  console.log("DataChart props:", { solarUnitId });
   
   const [selectedRange, setSelectedRange] = useState("7");
 
   const { data, isLoading, isError, error } =
       useGetEnergyGenerationRecordsBySolarUnitQuery({
         id: solarUnitId,
-        groupBy: "date",
-        limit: 7,
-        // Remove groupBy to get individual records for better processing
+        groupBy: "daily",
+        limit: parseInt(selectedRange),
+      }, {
+        skip: !solarUnitId // Skip API call if solarUnitId is not available
       });
 
   const handleRangeChange = (range) => {
     setSelectedRange(range);
   };
 
-  if (isLoading) return null;
-
-  if (isError) {
-    return null;
+  if (isLoading) {
+    return (
+      <Card className="rounded-md p-4">
+        <div className="flex justify-between items-center gap-2">
+          <h2 className="text-xl font-medium text-foreground">Energy Production Chart</h2>
+        </div>
+        <div className="mt-4 h-64 flex items-center justify-center text-gray-500">
+          Loading chart data...
+        </div>
+      </Card>
+    );
   }
 
-  if (!data || !Array.isArray(data) || data.length === 0) {
+  if (isError) {
+    console.error("DataChart API error:", error);
+    return (
+      <Card className="rounded-md p-4">
+        <div className="flex justify-between items-center gap-2">
+          <h2 className="text-xl font-medium text-foreground">Energy Production Chart</h2>
+        </div>
+        <div className="mt-4 h-64 flex items-center justify-center text-red-500">
+          Error loading chart: {error?.message || "Unknown error"}
+        </div>
+      </Card>
+    );
+  }
+
+  console.log("DataChart API response:", data);
+
+  // Handle grouped daily data format from backend
+  const records = Array.isArray(data) ? data : [];
+  
+  if (!records || records.length === 0) {
     return (
       <Card className="rounded-md p-4">
         <div className="flex justify-between items-center gap-2">
@@ -62,12 +90,18 @@ const DataChart = ({ solarUnitId }) => {
     );
   }
 
-  const lastSelectedRangeDaysEnergyProduction = data
+  const lastSelectedRangeDaysEnergyProduction = records
     .slice(0, parseInt(selectedRange))
     .map((el) => {
+      // Handle grouped data format: { _id: { date: "2024-11-19" }, totalEnergy: 45.5 }
+      const date = el._id?.date || el.date;
+      const energy = el.totalEnergy || el.energy || 0;
+      
+      console.log("DataChart item:", el, "Date:", date, "Energy:", energy);
+      
       return {
-        date: format(toDate(el._id.date), "MMM d"),
-        energy: el.totalEnergy,
+        date: date ? format(toDate(date), "MMM d") : "N/A",
+        energy: energy,
       };
     });
 

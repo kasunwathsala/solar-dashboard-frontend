@@ -1,19 +1,50 @@
-import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
+import { useGetEnergyGenerationRecordsBySolarUnitQuery, useGetSolarUnitByClerkUserIdQuery,useGetSolarUnitForUserQuery } from "@/lib/redux/query";
 import DataCard from "./components/DataCard";
 import DataChart from "./components/DataChart";
 import { format, toDate } from "date-fns";
 import { useUser } from "@clerk/clerk-react";
 
 const DashboardPage = () => {
-  const {user} = useUser();
+  const {user, isLoaded } = useUser();
   console.log("Dashboard user:", user);
-  // Use same API approach as home page - get individual records without groupBy
-  const solarUnitId = "6905bfb65ff604b96e34cd30"; // Example solar unit ID
+  console.log("User ID:", user?.id);
   
+  // Extract user ID properly to avoid [object Object] serialization
+  const userId = user?.id;
+  console.log("Extracted user ID:", userId, "Type:", typeof userId);
+  
+  // Skip API call if user ID is not available
+  const { data: solarUnit, isLoading: isLoadingSolarUnit, isError: isErrorSolarUnit, error: errorSolarUnit } = useGetSolarUnitByClerkUserIdQuery(userId, {
+    skip: !userId // Skip query if user ID is not available
+  });
+
+  console.log("Solar unit API state:", {
+    isLoadingSolarUnit,
+    isErrorSolarUnit,
+    error: errorSolarUnit,
+    solarUnit,
+    userId: userId
+  });
+
+  const solarUnitId = solarUnit?._id;
+  
+  // Always call this hook (React rules requirement)
   const { data, isLoading, isError, error } = useGetEnergyGenerationRecordsBySolarUnitQuery({
     id: solarUnitId,
-    // Remove groupBy to get individual records for better processing
+  }, {
+    skip: !solarUnitId // Skip if solar unit ID is not available
   });
+
+  // Handle loading and error states after all hooks
+  if (isLoadingSolarUnit) {
+    return <div>Loading...</div>;
+  }
+
+  if (isErrorSolarUnit) {
+    return <div>Error: {errorSolarUnit.message}</div>;
+  }
+
+  console.log(solarUnit);
   
   console.log("Dashboard API Response:", data);
 
@@ -93,27 +124,51 @@ const DashboardPage = () => {
     );
   }
 
+  // Don't render dashboard content until solar unit is loaded
+  if (!solarUnit?._id) {
+    const debugInfo = {
+      hasUser: !!user,
+      userId: user?.id,
+      isLoadingSolarUnit,
+      isErrorSolarUnit,
+      errorMessage: errorSolarUnit?.message,
+      solarUnit
+    };
+    console.log("Solar unit loading debug:", debugInfo);
+    
+    return (
+      <main className="mt-4">
+        <h1 className="text-4xl font-bold text-foreground">{user?.firstName || 'User'}'s House</h1>
+        <p className="text-gray-600 mt-2">Welcome back to your Solar Energy Production Dashboard</p>
+        <div className="mt-8">
+          {isLoadingSolarUnit ? (
+            <div>Loading solar unit data...</div>
+          ) : isErrorSolarUnit ? (
+            <div className="text-red-500">Error loading solar unit: {errorSolarUnit?.message || 'Unknown error'}</div>
+          ) : (
+            <div className="text-yellow-600">No solar unit found for user</div>
+          )}
+        </div>
+        <div className="mt-4 text-sm text-gray-500">
+          Debug: User ID = {userId || 'No user'}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="mt-4">
       <h1 className="text-4xl font-bold text-foreground">{user?.firstName || 'User'}'s House</h1>
       <p className="text-gray-600 mt-2">Welcome back to your Solar Energy Production Dashboard</p>
       <div className="mt-8">
         <DataCard
-          solarUnitId={solarUnitId}
-          // data={processedData}
-          // isLoading={isLoading}
-          // isError={isError}
-          // error={error}
+          solarUnitId={solarUnit._id}
           title="Last 7 Days Energy Production"
         />
       </div>
       <div className="mt-8">
         <DataChart
-          // data={processedData}
-          // isLoading={isLoading}
-          // isError={isError}
-          // error={error}
-          solarUnitId={solarUnitId}
+          solarUnitId={solarUnit._id}
         />
       </div>
     </main>

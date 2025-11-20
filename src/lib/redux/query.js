@@ -1,11 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { getSolarUnitById } from '../api/Solar-Unit';
 
 // Use relative `/api` so Vite dev server proxy forwards requests to the backend
 const baseUrl = "/api";
 // Define a service using a base URL and expected endpoints
 export const Api = createApi({
   reducerPath: 'Api',
-  baseQuery: fetchBaseQuery({ baseUrl: baseUrl }),
+  baseQuery: fetchBaseQuery({ baseUrl: baseUrl, prepareHeaders: async (headers) => {
+    const clerk = window.Clerk;
+    if (clerk) {
+      const token = await clerk.session.getToken();
+      console.log(token);
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+    }
+    return headers;
+  } }),
   endpoints: (build) => ({
     getEnergyGenerationRecordsBySolarUnitId: build.query({
       query: (id) => `/energy-generation-records/solar-unit/${id}`,
@@ -17,6 +28,13 @@ export const Api = createApi({
         return `/energy-generation-records/solar-unit/${id}${qs}`;
       },
     }),
+    getSolarUnitByClerkUserId: build.query({
+      query: (clerkUserId) => `/solar-units/users/${clerkUserId}`,
+    }),
+    // Get solar unit for authenticated user
+    getSolarUnitForUser: build.query({
+      query: () => `/solar-units/user/me`,
+    }),
   }),
 })
 
@@ -25,4 +43,6 @@ export const Api = createApi({
 export const { 
   useGetEnergyGenerationRecordsBySolarUnitIdQuery,
   useGetEnergyGenerationRecordsBySolarUnitQuery,
+  useGetSolarUnitByClerkUserIdQuery,
+  useGetSolarUnitForUserQuery,
 } = Api

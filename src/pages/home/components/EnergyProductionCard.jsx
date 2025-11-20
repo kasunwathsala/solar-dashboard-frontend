@@ -60,12 +60,12 @@ const EnergyProductionCard = (props) => {
         <span className="block text-xs text-gray-500">{props.date}</span>
       </div>
       <div className="p-6 pt-2 flex flex-col items-center">
-        <span
+          <span
           className={`block mb-1 text-3xl font-bold ${
             props.hasAnomaly ? "text-red-600" : "text-blue-600"
           }`}
         >
-          {props.production}
+          {typeof props.production === 'number' ? props.production.toFixed(1) : props.production}
         </span>
         <span className="block text-sm font-medium text-gray-500">kWh</span>
       </div>
