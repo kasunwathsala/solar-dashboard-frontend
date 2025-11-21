@@ -1,17 +1,13 @@
-import SolarUnitsTab from "./components/SolarUnitsTab";
+import { SolarUnitsTab } from "./components/SolarUnitsTab";
 
-const SolarUnitsPage = () => {
+export default function SolarUnitsPage() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Solar Units</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Manage and monitor all solar units in the system
-        </p>
+    <main className="mt-4">
+      <h1 className="text-4xl font-bold text-foreground">Solar Units</h1>
+      <p className="text-gray-600 mt-2">Manage and monitor all solar units</p>
+      <div className="mt-8">
+        <SolarUnitsTab />
       </div>
-      <SolarUnitsTab />
-    </div>
+    </main>
   );
-};
-
-export default SolarUnitsPage;
+}
