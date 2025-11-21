@@ -19,6 +19,7 @@ import AuthorizedLayout from "./layouts/authorized.layout.jsx";
 import ProtectedLayout from "./layouts/protected.layout.jsx";
 import SolarUnitCreatePage from "./pages/admin/solar-unit-create.page.jsx";
 import SolarUnitEditPage from "./pages/admin/solar-unit-edit.page.jsx";
+import SolarUnitDetailPage from "./pages/admin/solar-unit-detail.page.jsx";
 
 import { store } from "@/lib/redux/store.js";
 import { Provider } from "react-redux";
@@ -55,7 +56,7 @@ createRoot(document.getElementById("root")).render(
                   <Route element={<AdminLayout />}>
                     <Route path="/admin" element={<AdminPage />} />
                     <Route path="/admin/solar-units" element={<SolarUnitsPage />} />
-                    {/* <Route path="/admin/solar-units/:id" element={<SolarUnitdetailPage />} /> */}
+                    <Route path="/admin/solar-units/:id" element={<SolarUnitDetailPage />} />
                     <Route path="/admin/solar-units/create" element={<SolarUnitCreatePage />} />
                     <Route path="/admin/solar-units/:id/edit" element={<SolarUnitEditPage />} />
 
