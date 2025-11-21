@@ -4,9 +4,11 @@ import { Input } from "@/components/ui/input";
 import { useGetSolarUnitsQuery } from "@/lib/redux/query";
 import { Zap } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export function SolarUnitsTab() {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const { data: solarUnits, isLoading: isLoadingSolarUnits, isError: isErrorSolarUnits, error: errorSolarUnits } = useGetSolarUnitsQuery();
 
