@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCreateSolarUnitMutation } from "@/lib/redux/query"
 
 const formSchema = z.object({
     serialNumber: z.string().min(1, { message: "Serial number is required" }),
@@ -22,15 +23,27 @@ const formSchema = z.object({
   });
 
 export function CreateSolarUnitForm() {
+    const [createSolarUnit, { isLoading: isCreatingSolarUnit }] = useCreateSolarUnitMutation();
+    
     const form = useForm({
         resolver: zodResolver(formSchema),
-    })
+        defaultValues: {
+            serialNumber: "",
+            installationDate: "",
+            capacity: 0,
+            status: "",
+        }
+    });
 
-    function onSubmit(values) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    async function onSubmit(values) {
+        try {
+            await createSolarUnit(values);
+            form.reset();
+        } catch (error) {
+            console.error("Error creating solar unit:", error);
+        }
     }
+
 
     return (
         <Form {...form}>
@@ -96,7 +109,9 @@ export function CreateSolarUnitForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={isCreatingSolarUnit}>
+                    {isCreatingSolarUnit ? "Creating..." : "Create Solar Unit"}
+                </Button>
             </form>
         </Form>
     );

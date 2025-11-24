@@ -136,7 +136,7 @@ export default function SolarUnitDetailPage() {
               <div>
                 <p className="text-sm text-muted-foreground mb-1">User ID</p>
                 <p className="text-sm font-mono text-foreground">
-                  {solarUnit.userId}
+                  {solarUnit.userId ?? "No User Assigned"}
                 </p>
               </div>
             </div>

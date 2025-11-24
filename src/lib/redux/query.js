@@ -41,6 +41,13 @@ export const Api = createApi({
     getSolarUnitById: build.query({
       query: (id) => `/solar-units/${id}`,
     }),
+    createSolarUnit: build.mutation({
+      query: (data) => ({
+        url: `/solar-units`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -52,5 +59,5 @@ export const {
   useGetSolarUnitByClerkUserIdQuery,
   useGetSolarUnitForUserQuery,
   useGetSolarUnitsQuery,
-  useGetSolarUnitByIdQuery
+  useGetSolarUnitByIdQuery,useCreateSolarUnitMutation
 } = Api
