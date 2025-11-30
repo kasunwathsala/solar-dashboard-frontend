@@ -1,15 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
 import uiReducer from '../features/uiSlice'
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { Api } from './query';
+import { api } from './query';
 
 export const store = configureStore({
   reducer: {
     ui: uiReducer,
-    [Api.reducerPath]: Api.reducer,
+    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(Api.middleware),
+    getDefaultMiddleware().concat(api.middleware),
 
 });
 setupListeners(store.dispatch);

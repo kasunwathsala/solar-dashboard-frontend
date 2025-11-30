@@ -5,6 +5,7 @@ import { useGetSolarUnitsQuery } from "@/lib/redux/query";
 import { Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 export function SolarUnitsTab() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,15 +23,18 @@ export function SolarUnitsTab() {
 
   console.log(solarUnits);
 
-
-  const filteredUnits = searchTerm !== "" ? solarUnits.filter(
+  // Handle potential undefined data
+  const units = solarUnits || [];
+  const filteredUnits = searchTerm !== "" ? units.filter(
     (unit) =>
-      unit.serialNumber.toLowerCase().includes(searchTerm.toLowerCase())) : solarUnits;
+      unit.serialNumber.toLowerCase().includes(searchTerm.toLowerCase())) : units;
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <Button>Add New Unit</Button>
+        <Button asChild>
+          <Link to="/admin/solar-units/create">Add New Unit</Link>
+        </Button>
       </div>
 
       <div className="w-full max-w-md">
@@ -43,7 +47,7 @@ export function SolarUnitsTab() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredUnits.map((unit) => (
-          <Card key={unit.id} className="p-6 hover:shadow-lg transition-shadow">
+          <Card key={unit._id} className="p-6 hover:shadow-lg transition-shadow">
             <div className="flex items-start justify-between">
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2">
@@ -69,10 +73,20 @@ export function SolarUnitsTab() {
                 </p>
               </div>
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={() => navigate(`/admin/solar-units/${unit._id}/edit`)}
+                >
                   Edit
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={() => navigate(`/admin/solar-units/${unit._id}`)}
+                >
                   View
                 </Button>
               </div>
