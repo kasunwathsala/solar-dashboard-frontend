@@ -19,6 +19,8 @@ const EnergyProductionCards = (props) => {
             date={el.date}
             production={el.production}
             hasAnomaly={el.hasAnomaly}
+            anomalyType={el.anomalyType}
+            anomalyReason={el.anomalyReason}
           />
         );
       })}
