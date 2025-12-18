@@ -9,15 +9,41 @@ export const api = createApi({
   tagTypes: ['SolarUnit', 'EnergyRecord', 'User'],
   baseQuery: fetchBaseQuery({ 
     baseUrl: baseUrl, 
-    prepareHeaders: async (headers) => {
-      const clerk = window.Clerk;
-      if (clerk) {
-        const token = await clerk.session.getToken();
-        console.log(token);
-        if (token) {
-          headers.set("Authorization", `Bearer ${token}`);
+    prepareHeaders: async (headers, { getState }) => {
+      try {
+        // Wait for Clerk to load if not loaded yet
+        if (typeof window !== 'undefined') {
+          // Check if Clerk is available
+          if (window.Clerk && window.Clerk.loaded) {
+            const session = window.Clerk.session;
+            if (session) {
+              const token = await session.getToken();
+              console.log("✅ Auth token obtained successfully:", token ? "Token received" : "No token");
+              if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+              }
+            } else {
+              console.warn("⚠️ No active Clerk session - user not signed in");
+            }
+          } else {
+            console.warn("⚠️ Clerk not loaded yet - waiting for initialization");
+            // Try to wait a bit for Clerk to load
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            if (window.Clerk && window.Clerk.session) {
+              const token = await window.Clerk.session.getToken();
+              if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+                console.log("✅ Auth token obtained after waiting");
+              }
+            }
+          }
         }
+      } catch (error) {
+        console.error("❌ Error getting auth token:", error);
       }
+      
+      // Always set content type
+      headers.set("Content-Type", "application/json");
       return headers;
     } 
   }),
@@ -29,7 +55,9 @@ export const api = createApi({
     // Supports object input with optional grouping
     getEnergyGenerationRecordsBySolarUnit: build.query({
       query: ({ id, groupBy, limit } = {}) => {
-        const qs = groupBy ? `?groupBy=${encodeURIComponent(groupBy)}&limit=${encodeURIComponent(limit)}` : '';
+        // Map frontend groupBy values to backend expected values
+        const mappedGroupBy = groupBy === 'date' ? 'daily' : groupBy;
+        const qs = mappedGroupBy ? `?groupBy=${encodeURIComponent(mappedGroupBy)}&limit=${encodeURIComponent(limit)}` : '';
         return `/energy-generation-records/solar-unit/${id}${qs}`;
       },
       providesTags: ['EnergyRecord'],

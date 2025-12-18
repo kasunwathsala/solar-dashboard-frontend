@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
-import { switchDashboardTab } from "@/lib/redux/features/uiSlice";
+import { switchDashboardTab } from "@/lib/features/uiSlice";
 import { useDispatch } from "react-redux";
 
 const EnergyTab = (props) => {
