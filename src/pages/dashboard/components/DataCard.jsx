@@ -56,8 +56,8 @@ const DataCard = ({ title = "Solar Energy Production", solarUnitId }) => {
 
   console.log(data);
 
-  // Get last 7 days of data
-  const last7Days = data.slice(0, 7);
+  // Get last 7 days of data and filter out any undefined/null values
+  const last7Days = data.slice(0, 7).filter(item => item && (item.date || item._id));
 
   // Apply anomaly detection with options
   const dataWithAnomalies = detectAnomalies(last7Days, detectionMethod, {
@@ -67,9 +67,10 @@ const DataCard = ({ title = "Solar Energy Production", solarUnitId }) => {
 
   // Transform to UI format
   const energyProductionData = dataWithAnomalies.map((el) => {
+    const dateString = el.date || el._id?.date || el._id;
     return {
-      day: format(toDate(el._id.date), "EEE"),
-      date: format(toDate(el._id.date), "MMM d"),
+      day: format(toDate(dateString), "EEE"),
+      date: format(toDate(dateString), "MMM d"),
       production: el.totalEnergy,
       hasAnomaly: el.hasAnomaly,
       anomalyType: el.anomalyType,
@@ -93,88 +94,7 @@ const DataCard = ({ title = "Solar Energy Production", solarUnitId }) => {
   console.log('Data with Anomalies:', dataWithAnomalies);
 
   return (
-    <Card className="rounded-md p-6">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">
-            {title}
-          </h2>
-          <p className="text-gray-600">Daily energy output for the past 7 days</p>
-        </div>
-
-        {/* Detection Method Selector - for teaching demonstrations */}
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500 font-medium">Detection Method:</label>
-            <select
-              value={detectionMethod}
-              onChange={(e) => setDetectionMethod(e.target.value)}
-              className="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="windowAverage">Window Average (7-day)</option>
-              <option value="absolute">Absolute Threshold</option>
-              <option value="combined">Combined (Recommended)</option>
-            </select>
-          </div>
-
-          {/* Threshold Controls for Teaching */}
-          {(detectionMethod === 'windowAverage' || detectionMethod === 'combined') && (
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500 font-medium">
-                Threshold: {thresholdPercent}% below average
-              </label>
-              <input
-                type="range"
-                min="20"
-                max="60"
-                value={thresholdPercent}
-                onChange={(e) => setThresholdPercent(Number(e.target.value))}
-                className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-            </div>
-          )}
-
-          {/* Absolute Minimum Threshold Control */}
-          {(detectionMethod === 'absolute' || detectionMethod === 'combined') && (
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500 font-medium">
-                Minimum: {absoluteMin} kWh
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="15"
-                value={absoluteMin}
-                onChange={(e) => setAbsoluteMin(Number(e.target.value))}
-                className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Anomaly Statistics - shows detection results */}
-      <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <p className="text-sm text-blue-900">
-              <span className="font-semibold">Window Average:</span> {stats.windowAverage} kWh
-              {' | '}
-              <span className="font-semibold">Range:</span> {stats.minEnergy} - {stats.maxEnergy} kWh
-            </p>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm text-blue-900">
-              <span className="font-semibold">Anomalies:</span>{' '}
-              <span className={stats.anomalyCount > 0 ? 'text-red-600 font-bold' : 'text-green-600'}>
-                {stats.anomalyCount}
-              </span>
-              {' '}out of {stats.totalRecords} days ({stats.anomalyRate})
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div className="bg-white">
       {/* Tab Filters */}
       <div className="mb-4 flex items-center gap-x-4">
         {tabs.map((tab) => {
@@ -182,9 +102,9 @@ const DataCard = ({ title = "Solar Energy Production", solarUnitId }) => {
         })}
       </div>
 
-      {/* Energy Production Cards with Anomaly Detection */}
+      {/* Energy Production Cards */}
       <EnergyProductionCards energyProductionData={filteredData} />
-    </Card>
+    </div>
   );
 };
 

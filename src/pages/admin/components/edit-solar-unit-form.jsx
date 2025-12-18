@@ -22,7 +22,7 @@ const formSchema = z.object({
     installationDate: z.string().min(1, { message: "Installation date is required" }),
     capacity: z.number().positive({ message: "Capacity must be a positive number" }),
     status: z.enum(["ACTIVE", "INACTIVE", "MAINTENANCE"], { message: "Please select a valid status" }),
-    userId: z.string().min(1, { message: "User ID is required" }),
+    userid: z.string().optional(),
 });
 
 export function EditSolarUnitForm({ solarUnit }) {
@@ -33,7 +33,7 @@ export function EditSolarUnitForm({ solarUnit }) {
             installationDate: solarUnit.installationDate,
             capacity: solarUnit.capacity,
             status: solarUnit.status,
-            userId: solarUnit.userId,
+            userid: solarUnit.userid || "",
         },
     })
 
@@ -48,9 +48,23 @@ export function EditSolarUnitForm({ solarUnit }) {
 
     async function onSubmit(values) {
         try {
-            await editSolarUnit({ id, data: values }).unwrap();
+            console.log("🔄 Updating solar unit with values:", values);
+            
+            // Remove userid if it's empty string
+            const payload = {
+                ...values,
+            };
+            
+            if (payload.userid === "") {
+                delete payload.userid;
+            }
+            
+            const result = await editSolarUnit({ id, data: payload }).unwrap();
+            console.log("✅ Solar unit updated successfully:", result);
+            alert("Solar unit updated successfully!");
         } catch (error) {
-            console.error(error);
+            console.error("❌ Error updating solar unit:", error);
+            alert(`Failed to update solar unit: ${error?.data?.message || error.message || 'Unknown error'}`);
         }
     }
 
@@ -120,18 +134,21 @@ export function EditSolarUnitForm({ solarUnit }) {
                 />
                 <FormField
                     control={form.control}
-                    name="userId"
+                    name="userid"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>User</FormLabel>
+                            <FormLabel>Assign to User (Optional)</FormLabel>
                             <FormControl>
-                                <Select value={field.value || ""} onValueChange={field.onChange}>
+                                <Select value={field.value || ""} onValueChange={field.onChange} disabled={isLoadingUsers}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select User" />
+                                        <SelectValue placeholder={isLoadingUsers ? "Loading users..." : "Select User (Optional)"} />
                                     </SelectTrigger>
                                     <SelectContent>
+                                        <SelectItem value="">None - Don't assign to any user</SelectItem>
                                         {users?.map((user) => (
-                                            <SelectItem key={user._id} value={user._id}>{user.email}</SelectItem>
+                                            <SelectItem key={user._id} value={user._id}>
+                                                {user.email} {user.role === 'admin' ? '(Admin)' : ''}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>

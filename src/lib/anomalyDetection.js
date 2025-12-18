@@ -149,9 +149,11 @@ export function detectCombinedAnomalies(records, windowThresholdPercent = 40, ab
  */
 export function detectAnomalies(records, method = 'windowAverage', options = {}) {
   // Ensure data is sorted by date (ascending)
-  const sortedRecords = [...records].sort((a, b) =>
-    new Date(a._id.date) - new Date(b._id.date)
-  );
+  const sortedRecords = [...records].sort((a, b) => {
+    const dateA = a.date || a._id?.date || a._id;
+    const dateB = b.date || b._id?.date || b._id;
+    return new Date(dateA) - new Date(dateB);
+  });
 
   const {
     windowThresholdPercent = 40,

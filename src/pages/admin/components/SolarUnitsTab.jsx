@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useGetSolarUnitsQuery } from "@/lib/redux/query";
-import { Zap } from "lucide-react";
+import { useGetSolarUnitsQuery, useDeleteSolarUnitMutation } from "@/lib/redux/query";
+import { Zap, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
@@ -12,6 +12,7 @@ export function SolarUnitsTab() {
   const navigate = useNavigate();
 
   const { data: solarUnits, isLoading: isLoadingSolarUnits, isError: isErrorSolarUnits, error: errorSolarUnits } = useGetSolarUnitsQuery();
+  const [deleteSolarUnit, { isLoading: isDeleting }] = useDeleteSolarUnitMutation();
 
   if (isLoadingSolarUnits) {
     return <div>Loading...</div>;
@@ -28,6 +29,18 @@ export function SolarUnitsTab() {
   const filteredUnits = searchTerm !== "" ? units.filter(
     (unit) =>
       unit.serialNumber.toLowerCase().includes(searchTerm.toLowerCase())) : units;
+
+  const handleDelete = async (id, serialNumber) => {
+    if (window.confirm(`Are you sure you want to delete solar unit "${serialNumber}"? This action cannot be undone.`)) {
+      try {
+        await deleteSolarUnit(id).unwrap();
+        alert("Solar unit deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete solar unit:", error);
+        alert("Failed to delete solar unit. Please try again.");
+      }
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -78,6 +91,7 @@ export function SolarUnitsTab() {
                   size="sm" 
                   className="flex-1"
                   onClick={() => navigate(`/admin/solar-units/${unit._id}/edit`)}
+                  disabled={isDeleting}
                 >
                   Edit
                 </Button>
@@ -86,8 +100,17 @@ export function SolarUnitsTab() {
                   size="sm" 
                   className="flex-1"
                   onClick={() => navigate(`/admin/solar-units/${unit._id}`)}
+                  disabled={isDeleting}
                 >
                   View
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  onClick={() => handleDelete(unit._id, unit.serialNumber)}
+                  disabled={isDeleting}
+                >
+                  <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             </div>

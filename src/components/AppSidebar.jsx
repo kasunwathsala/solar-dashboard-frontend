@@ -21,8 +21,8 @@ const items = [
     icon: LayoutDashboard,
   },
   {
-    title: "Anomaly",
-    url: "#",
+    title: "Anomalies",
+    url: "/anomalies",
     icon: TriangleAlert,
   },
   {

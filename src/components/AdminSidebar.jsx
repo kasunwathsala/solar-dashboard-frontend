@@ -1,5 +1,6 @@
-import { Settings, Zap } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { Settings, Zap, LogOut } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useClerk, useUser } from "@clerk/clerk-react";
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +10,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 
 // Menu items for admin navigation.
 const items = [
@@ -42,6 +45,19 @@ const AdminSideBarTab = ({ item }) => {
 };
 
 export function AdminSidebar() {
+  const { signOut } = useClerk();
+  const { user } = useUser();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate("/sign-in");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -58,6 +74,24 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <div className="p-4 border-t">
+          <div className="mb-3">
+            <p className="text-sm font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
+            <p className="text-xs text-gray-500">{user?.emailAddresses?.[0]?.emailAddress}</p>
+            <p className="text-xs text-blue-600 font-semibold mt-1">Admin</p>
+          </div>
+          <Button 
+            onClick={handleLogout} 
+            variant="destructive" 
+            className="w-full gap-2"
+            size="sm"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </Button>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }

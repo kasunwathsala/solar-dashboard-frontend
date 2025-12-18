@@ -39,38 +39,38 @@ const EnergyProductionCard = (props) => {
 
   return (
     <button
-      className={`w-full min-h-32 cursor-pointer ${
-        isSelected ? "outline-2 outline-offset-2 outline-blue-600" : ""
-      } relative border ${
-        props.hasAnomaly ? "border-red-500" : "border-gray-300"
-      } rounded-lg transition-all hover:shadow-md overflow-hidden`}
+      className={`w-full min-h-40 cursor-pointer ${
+        isSelected ? "outline-2 outline-offset-2 outline-blue-500" : ""
+      } relative border-2 ${
+        props.hasAnomaly ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"
+      } rounded-xl transition-all hover:shadow-lg hover:scale-105 hover:-translate-y-1 overflow-hidden`}
       onClick={handleClick}
       title={props.hasAnomaly ? props.anomalyReason : "Normal operation"}
     >
       {props.hasAnomaly && (
-        <div className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 text-sm rounded-bl-lg">
-          Anomaly
+        <div className="absolute top-0 right-0 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-bl-xl shadow-md">
+          ⚠️ Anomaly
         </div>
       )}
-      <div className="flex flex-col items-center gap-1 p-2 pb-1">
-        <span className="block text-gray-600 text-xs font-medium truncate">
+      <div className="flex flex-col items-center gap-2 pt-4 pb-2 px-3">
+        <span className="block text-gray-700 text-sm font-semibold">
           {props.day}
         </span>
-        <span className="block text-xs text-gray-500 truncate">{props.date}</span>
+        <span className="block text-xs text-gray-500 font-medium">{props.date}</span>
       </div>
-      <div className="p-2 pt-1 flex flex-col items-center">
+      <div className="pb-4 px-3 flex flex-col items-center">
         <span
-          className={`block mb-1 text-lg font-bold truncate ${
+          className={`block mb-1 text-3xl font-bold ${
             props.hasAnomaly ? "text-red-600" : "text-blue-600"
           }`}
         >
           {typeof props.production === 'number' ? props.production.toFixed(1) : props.production}
         </span>
-        <span className="block text-xs font-medium text-gray-500">kWh</span>
+        <span className="block text-sm font-semibold text-gray-600">kWh</span>
 
         {/* Show anomaly type and reason when detected */}
         {props.hasAnomaly && props.anomalyType && (
-          <div className="mt-2 px-2 py-1 bg-red-50 rounded text-xs text-red-700">
+          <div className="mt-2 px-2 py-1 bg-red-100 rounded-md text-xs font-medium text-red-700">
             {props.anomalyType}
           </div>
         )}

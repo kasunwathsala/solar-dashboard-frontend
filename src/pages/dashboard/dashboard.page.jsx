@@ -31,7 +31,14 @@ const DashboardPage = () => {
     );
   }
 
-  if (isErrorSolarUnit) {
+  // Check if error is "solar unit not found" - this is normal for users without assigned units
+  const isSolarUnitNotFound = isErrorSolarUnit && 
+    (errorSolarUnit?.status === 404 || 
+     errorSolarUnit?.originalStatus === 404 ||
+     errorSolarUnit?.data?.message?.toLowerCase().includes('not found'));
+
+  if (isErrorSolarUnit && !isSolarUnitNotFound) {
+    // This is a real error (not just "not found")
     console.error("🔴 Solar unit API error:", errorSolarUnit);
     return (
       <div className="mt-4 p-6 bg-red-50 border border-red-200 rounded-lg">
@@ -57,13 +64,32 @@ const DashboardPage = () => {
     );
   }
 
-  if (!solarUnit) {
+  // Show welcome message if solar unit not found (404) or no solar unit data
+  if (!solarUnit || isSolarUnitNotFound) {
     return (
       <div className="mt-4 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <h2 className="text-xl font-bold text-yellow-800 mb-2">⚠️ No Solar Unit Found</h2>
-        <p className="text-yellow-700">
-          No solar unit is associated with your account. Please contact an administrator.
+        <h2 className="text-xl font-bold text-yellow-800 mb-4">🌞 Welcome to Solar Dashboard</h2>
+        <p className="text-yellow-700 mb-3">
+          Your account has been created successfully! However, no solar unit is currently assigned to your account.
         </p>
+        <div className="bg-white p-4 rounded-lg border border-yellow-300 mb-4">
+          <h3 className="font-semibold text-gray-800 mb-2">Next Steps:</h3>
+          <ol className="list-decimal list-inside space-y-2 text-gray-700">
+            <li>An administrator will add a solar unit to your account</li>
+            <li>Once added, you'll be able to view your solar energy generation data</li>
+            <li>You can track your daily energy production, view analytics, and detect anomalies</li>
+          </ol>
+        </div>
+        <p className="text-sm text-gray-600">
+          Please contact your administrator if you've been waiting for a while or if you think this is an error.
+        </p>
+        {user && (
+          <div className="mt-4 pt-4 border-t border-yellow-300">
+            <p className="text-xs text-gray-600">
+              <strong>Your Account:</strong> {user.emailAddresses?.[0]?.emailAddress}
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -82,9 +108,7 @@ const DashboardPage = () => {
         Welcome back to your Solar Energy Production Dashboard
       </p>
       
-      {/* Debug info */}
       <div className="mt-4 p-3 bg-blue-50 rounded border text-sm">
-        <p><strong>Solar Unit ID:</strong> {solarUnit._id}</p>
         <p><strong>Serial Number:</strong> {solarUnit.serialNumber}</p>
         <p><strong>Status:</strong> {solarUnit.status}</p>
       </div>

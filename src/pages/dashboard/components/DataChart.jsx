@@ -86,12 +86,16 @@ const DataChart = ({ solarUnitId }) => {
   console.log("📊 Selected range:", selectedRange);
 
   // Data is already limited by the API call, no need to slice again
-  const lastSelectedRangeDaysEnergyProduction = data.map((el) => {
-    return {
-      date: format(toDate(el._id.date), "MMM d"),
-      energy: el.totalEnergy,
-    };
-  });
+  // Filter out undefined values and handle both old and new date formats
+  const lastSelectedRangeDaysEnergyProduction = data
+    .filter(el => el && (el.date || el._id?.date || el._id))
+    .map((el) => {
+      const dateString = el.date || el._id?.date || el._id;
+      return {
+        date: format(toDate(dateString), "MMM d"),
+        energy: el.totalEnergy,
+      };
+    });
 
   console.log("📈 Chart processed data:", lastSelectedRangeDaysEnergyProduction.length, "data points");
 
@@ -105,60 +109,81 @@ const DataChart = ({ solarUnitId }) => {
   const title = "Energy Production Chart";
 
   return (
-    <Card className="rounded-md p-4">
-      <div className="flex justify-between items-center gap-2">
-        <h2 className="text-xl font-medium text-foreground">{title}</h2>
+    <Card className="rounded-xl p-6 shadow-lg border-2 border-gray-200 bg-gradient-to-br from-white to-blue-50">
+      <div className="flex justify-between items-center gap-2 mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-1">{title}</h2>
+          <p className="text-sm text-gray-500">Daily energy output trends</p>
+        </div>
         <div>
           <Select value={selectedRange} onValueChange={handleRangeChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] border-2 border-blue-200 bg-white hover:border-blue-400 transition-colors">
               <SelectValue
-                className="text-foreground"
+                className="text-foreground font-medium"
                 placeholder="Select Range"
               />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="7">Last 7 Days</SelectItem>
-              <SelectItem value="14">Last 14 Days</SelectItem>
-              <SelectItem value="30">Last 30 Days</SelectItem>
+              <SelectItem value="7">📅 Last 7 Days</SelectItem>
+              <SelectItem value="14">📅 Last 14 Days</SelectItem>
+              <SelectItem value="30">📅 Last 30 Days</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
-      <div className="mt-6 w-full" style={{ height: '400px', minHeight: '400px' }}>
+      <div className="mt-4 w-full bg-white rounded-lg p-4 shadow-inner" style={{ height: '400px', minHeight: '400px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={lastSelectedRangeDaysEnergyProduction}
             margin={{
-              left: 40,
-              right: 20,
+              left: 12,
+              right: 12,
               top: 20,
               bottom: 20,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <defs>
+              <linearGradient id="colorEnergy" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
             <XAxis
               dataKey="date"
-              tickLine={true}
-              axisLine={true}
-              tickMargin={8}
-              tick={false}
-              label={{ value: "Date", position: "insideBottom", offset: -5 }}
+              tickLine={false}
+              axisLine={{ stroke: '#9CA3AF', strokeWidth: 2 }}
+              tickMargin={12}
+              tick={{ fill: '#6B7280', fontSize: 12, fontWeight: 500 }}
+              label={{ value: "Date", position: "insideBottom", offset: -10, style: { fill: '#374151', fontWeight: 600 } }}
             />
             <YAxis
-              tickLine={true}
-              axisLine={true}
-              tickMargin={8}
-              tickCount={10}
-              label={{ value: "kWh", angle: -90, position: "insideLeft" }}
+              tickLine={false}
+              axisLine={{ stroke: '#9CA3AF', strokeWidth: 2 }}
+              tickMargin={12}
+              tickCount={8}
+              tick={{ fill: '#6B7280', fontSize: 12, fontWeight: 500 }}
+              label={{ value: "Energy (kWh)", angle: -90, position: "insideLeft", offset: 0, style: { fill: '#374151', fontWeight: 600 } }}
             />
-            <Tooltip />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#1F2937', 
+                border: 'none', 
+                borderRadius: '8px', 
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                padding: '12px'
+              }}
+              labelStyle={{ color: '#F9FAFB', fontWeight: 600, marginBottom: '4px' }}
+              itemStyle={{ color: '#60A5FA', fontWeight: 500 }}
+            />
             <Area
               dataKey="energy"
-              type="natural"
-              fill="#3B82F6"
-              fillOpacity={0.3}
-              stroke="#3B82F6"
-              strokeWidth={2}
+              type="monotone"
+              fill="url(#colorEnergy)"
+              stroke="#2563EB"
+              strokeWidth={3}
+              dot={{ fill: '#2563EB', strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, fill: '#1D4ED8', strokeWidth: 2, stroke: '#fff' }}
             />
             </AreaChart>
           </ResponsiveContainer>

@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 
 import HomePage from "./pages/home/home.page.jsx";
 import DashboardPage from "./pages/dashboard/dashboard.page.jsx";
+import AnomaliesPage from "./pages/anomalies/anomalies.page.jsx";
 
 import RootLayout from "./layouts/root.layout.jsx";
 import MainLayout from "./layouts/main.layout.jsx";
@@ -49,6 +50,7 @@ createRoot(document.getElementById("root")).render(
               <Route element={<ProtectedLayout />}>
                 <Route element={<DashboardLayout />}>
                   <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/anomalies" element={<AnomaliesPage />} />
                 </Route>
                 
                 <Route element={<AuthorizedLayout />}>

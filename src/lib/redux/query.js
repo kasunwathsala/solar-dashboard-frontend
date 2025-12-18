@@ -95,6 +95,13 @@ export const api = createApi({
       }),
       invalidatesTags: ['SolarUnit'],
     }),
+    deleteSolarUnit: build.mutation({
+      query: (id) => ({
+        url: `/solar-units/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ['SolarUnit'],
+    }),
     getAllUsers: build.query({
       query: () => `/users`,
       providesTags: ['User'],
@@ -113,5 +120,6 @@ export const {
   useGetSolarUnitsQuery, 
   useGetSolarUnitByIdQuery, 
   useCreateSolarUnitMutation, 
-  useEditSolarUnitMutation 
+  useEditSolarUnitMutation,
+  useDeleteSolarUnitMutation 
 } = api;
