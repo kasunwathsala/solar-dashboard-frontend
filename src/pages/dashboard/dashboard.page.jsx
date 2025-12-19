@@ -2,6 +2,8 @@ import { useGetSolarUnitForUserQuery } from "@/lib/redux/query";
 import DataCard from "./components/DataCard";
 import DataChart from "./components/DataChart";
 import WeatherWidget from "@/components/WeatherWidget";
+import CapacityFactorChart from "@/components/CapacityFactorChart";
+import PeakHourDistribution from "@/components/PeakHourDistribution";
 import { useUser } from "@clerk/clerk-react";
 
 const DashboardPage = () => {
@@ -122,8 +124,18 @@ const DashboardPage = () => {
       <div className="mt-8">
         <DataCard solarUnitId={solarUnit._id} />
       </div>
+      
       <div className="mt-8">
         <DataChart solarUnitId={solarUnit._id} />
+      </div>
+      
+      {/* New Metric Visualizations */}
+      <div className="mt-8">
+        <CapacityFactorChart solarUnitId={solarUnit._id} days={7} />
+      </div>
+      
+      <div className="mt-8">
+        <PeakHourDistribution solarUnitId={solarUnit._id} days={30} />
       </div>
     </main>
   );

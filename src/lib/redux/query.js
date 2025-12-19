@@ -109,6 +109,14 @@ export const api = createApi({
     getWeather: build.query({
       query: ({ lat, lon }) => `/weather?lat=${lat}&lon=${lon}`,
     }),
+    getCapacityFactor: build.query({
+      query: ({ solarUnitId, days = 7 }) => `/metrics/capacity-factor/solar-unit/${solarUnitId}?days=${days}`,
+      providesTags: ['EnergyRecord'],
+    }),
+    getPeakHours: build.query({
+      query: ({ solarUnitId, days = 30 }) => `/metrics/peak-hours/solar-unit/${solarUnitId}?days=${days}`,
+      providesTags: ['EnergyRecord'],
+    }),
   }),
 })
 
@@ -125,5 +133,7 @@ export const {
   useCreateSolarUnitMutation, 
   useEditSolarUnitMutation,
   useDeleteSolarUnitMutation,
-  useGetWeatherQuery
+  useGetWeatherQuery,
+  useGetCapacityFactorQuery,
+  useGetPeakHoursQuery
 } = api;
