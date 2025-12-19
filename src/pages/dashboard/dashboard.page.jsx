@@ -1,6 +1,7 @@
 import { useGetSolarUnitForUserQuery } from "@/lib/redux/query";
 import DataCard from "./components/DataCard";
 import DataChart from "./components/DataChart";
+import WeatherWidget from "@/components/WeatherWidget";
 import { useUser } from "@clerk/clerk-react";
 
 const DashboardPage = () => {
@@ -108,9 +109,14 @@ const DashboardPage = () => {
         Welcome back to your Solar Energy Production Dashboard
       </p>
       
-      <div className="mt-4 p-3 bg-blue-50 rounded border text-sm">
+      <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800 text-sm transition-colors">
         <p><strong>Serial Number:</strong> {solarUnit.serialNumber}</p>
         <p><strong>Status:</strong> {solarUnit.status}</p>
+      </div>
+
+      {/* Weather Widget */}
+      <div className="mt-8">
+        <WeatherWidget latitude={6.9271} longitude={79.8612} />
       </div>
       
       <div className="mt-8">

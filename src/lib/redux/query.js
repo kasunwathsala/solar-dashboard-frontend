@@ -106,6 +106,9 @@ export const api = createApi({
       query: () => `/users`,
       providesTags: ['User'],
     }),
+    getWeather: build.query({
+      query: ({ lat, lon }) => `/weather?lat=${lat}&lon=${lon}`,
+    }),
   }),
 })
 
@@ -121,5 +124,6 @@ export const {
   useGetSolarUnitByIdQuery, 
   useCreateSolarUnitMutation, 
   useEditSolarUnitMutation,
-  useDeleteSolarUnitMutation 
+  useDeleteSolarUnitMutation,
+  useGetWeatherQuery
 } = api;

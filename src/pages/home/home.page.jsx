@@ -1,7 +1,7 @@
 import HeroSection from "./components/HeroSection/HeroSection";
 import { useGetSolarUnitForUserQuery } from "@/lib/redux/query";
 import DataCard from "../dashboard/components/DataCard";
-import DataChart from "../dashboard/components/DataChart";
+import WeatherWidget from "@/components/WeatherWidget";
 import { useUser } from "@clerk/clerk-react";
 
 const HomePage = () => {
@@ -22,7 +22,8 @@ const HomePage = () => {
       
       {/* Show dashboard cards if user has a solar unit */}
       {hasSolarUnit && (
-        <div className="container mx-auto px-4 mt-12 mb-12">
+        <div className="container mx-auto px-4 mt-12 mb-12 space-y-8">
+          <WeatherWidget latitude={6.9271} longitude={79.8612} />
           <DataCard solarUnitId={solarUnit._id} />
         </div>
       )}
