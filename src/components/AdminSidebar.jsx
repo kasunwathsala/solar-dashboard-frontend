@@ -1,6 +1,7 @@
 import { Settings, Zap, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useClerk, useUser } from "@clerk/clerk-react";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
   Sidebar,
   SidebarContent,
@@ -62,8 +63,15 @@ export function AdminSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-3xl font-bold text-foreground">
-            <Link to="/">Aelora</Link>
+          <SidebarGroupLabel className="flex items-center gap-3 py-2">
+            <Link to="/" className="flex items-center gap-3">
+              <img 
+                src="/assets/images/sun.png" 
+                alt="SunLeaf Energy Logo" 
+                className="h-10 w-auto object-contain"
+              />
+              <span className="text-2xl font-bold text-foreground">SunLeaf Energy</span>
+            </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-4">
@@ -75,16 +83,19 @@ export function AdminSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <div className="p-4 border-t">
-          <div className="mb-3">
-            <p className="text-sm font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
-            <p className="text-xs text-gray-500">{user?.emailAddresses?.[0]?.emailAddress}</p>
-            <p className="text-xs text-blue-600 font-semibold mt-1">Admin</p>
+        <div className="p-4 border-t border-border">
+          <div className="mb-3 flex items-center justify-between">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">{user?.firstName} {user?.lastName}</p>
+              <p className="text-xs text-muted-foreground">{user?.emailAddresses?.[0]?.emailAddress}</p>
+              <p className="text-xs text-primary font-semibold mt-1">Admin</p>
+            </div>
+            <ThemeToggle />
           </div>
           <Button 
             onClick={handleLogout} 
             variant="destructive" 
-            className="w-full gap-2"
+            className="w-full gap-2 bg-destructive hover:bg-destructive/90"
             size="sm"
           >
             <LogOut className="w-4 h-4" />
