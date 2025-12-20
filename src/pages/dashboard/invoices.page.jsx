@@ -191,11 +191,10 @@ const InvoicesPage = () => {
                   <div className="ml-6">
                     <button
                       onClick={() => handlePayInvoice(invoice._id)}
-                      disabled={isCreatingSession}
-                      className="px-6 py-3 bg-gradient-to-r from-primary to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      className="px-6 py-3 bg-gradient-to-r from-primary to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center gap-2"
                     >
                       <CreditCard className="w-5 h-5" />
-                      {isCreatingSession ? "Processing..." : "Pay Now"}
+                      Pay Now
                     </button>
                   </div>
                 )}

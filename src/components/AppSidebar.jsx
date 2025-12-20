@@ -29,7 +29,7 @@ const items = [
   },
   {
     title: "Anomalies",
-    url: "/anomalies",
+    url: "/dashboard/anomalies",
     icon: TriangleAlert,
   },
   {
@@ -41,10 +41,13 @@ const items = [
 
 export function AppSidebar() {
   const location = useLocation();
-  const { data: invoices } = useGetUserInvoicesQuery({ status: "ALL" });
+  const { data: invoices, isError } = useGetUserInvoicesQuery({ status: "ALL" }, {
+    // Don't refetch on mount if data exists
+    refetchOnMountOrArgChange: false,
+  });
   
   // Count pending/overdue invoices for badge
-  const pendingCount = invoices 
+  const pendingCount = (invoices && !isError)
     ? invoices.filter(inv => inv.status === "PENDING" || inv.status === "OVERDUE").length 
     : 0;
 

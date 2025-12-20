@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetAllInvoicesQuery, useGenerateInvoiceMutation } from "@/lib/redux/query";
+import { useGetAllInvoicesQuery, useGenerateInvoiceMutation, useGetSolarUnitsQuery } from "@/lib/redux/query";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Receipt, DollarSign, Calendar, AlertCircle, CheckCircle, Clock, XCircle, Plus } from "lucide-react";
@@ -7,6 +7,7 @@ import { Receipt, DollarSign, Calendar, AlertCircle, CheckCircle, Clock, XCircle
 const AdminInvoicesPage = () => {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const { data: invoices, isLoading, isError } = useGetAllInvoicesQuery({ status: statusFilter });
+  const { data: solarUnits, isLoading: isLoadingSolarUnits } = useGetSolarUnitsQuery();
   const [generateInvoice, { isLoading: isGenerating }] = useGenerateInvoiceMutation();
   
   const [showGenerateForm, setShowGenerateForm] = useState(false);
@@ -119,15 +120,24 @@ const AdminInvoicesPage = () => {
           <h3 className="text-lg font-semibold mb-4">Generate Manual Invoice</h3>
           <form onSubmit={handleGenerateInvoice} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Solar Unit ID</label>
-              <input
-                type="text"
-                value={formData.solarUnitId}
-                onChange={(e) => setFormData({ ...formData, solarUnitId: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800"
-                placeholder="Enter solar unit ID"
-                required
-              />
+              <label className="block text-sm font-medium mb-2">Solar Unit</label>
+              {isLoadingSolarUnits ? (
+                <Skeleton className="h-10 w-full" />
+              ) : (
+                <select
+                  value={formData.solarUnitId}
+                  onChange={(e) => setFormData({ ...formData, solarUnitId: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:text-white"
+                  required
+                >
+                  <option value="">Select a solar unit</option>
+                  {solarUnits?.map((unit) => (
+                    <option key={unit._id} value={unit._id}>
+                      {unit.name || unit.serialNumber} - {unit.capacity}W ({unit.status})
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

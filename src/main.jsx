@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 
 import HomePage from "./pages/home/home.page.jsx";
 import DashboardPage from "./pages/dashboard/dashboard.page.jsx";
-import AnomaliesPage from "./pages/anomalies/anomalies.page.jsx";
+import AnomaliesPage from "./pages/dashboard/anomalies.page.jsx";
 import InvoicesPage from "./pages/dashboard/invoices.page.jsx";
 import PaymentPage from "./pages/dashboard/payment.page.jsx";
 import CompletePage from "./pages/dashboard/complete.page.jsx";
@@ -57,7 +57,7 @@ createRoot(document.getElementById("root")).render(
                   <Route path="/dashboard/invoices" element={<InvoicesPage />} />
                   <Route path="/dashboard/invoices/payment/:invoiceId" element={<PaymentPage />} />
                   <Route path="/dashboard/invoices/complete" element={<CompletePage />} />
-                  <Route path="/anomalies" element={<AnomaliesPage />} />
+                  <Route path="/dashboard/anomalies" element={<AnomaliesPage />} />
                 </Route>
                 
                 <Route element={<AuthorizedLayout />}>
