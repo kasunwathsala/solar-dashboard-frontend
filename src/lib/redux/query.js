@@ -6,7 +6,7 @@ const baseUrl = "/api";
 // Define a service using a base URL and expected endpoints
 export const api = createApi({
   reducerPath: "api",
-  tagTypes: ['SolarUnit', 'EnergyRecord', 'User'],
+  tagTypes: ['SolarUnit', 'EnergyRecord', 'User', 'Invoice'],
   baseQuery: fetchBaseQuery({ 
     baseUrl: baseUrl, 
     prepareHeaders: async (headers, { getState }) => {
@@ -117,6 +117,45 @@ export const api = createApi({
       query: ({ solarUnitId, days = 30 }) => `/metrics/peak-hours/solar-unit/${solarUnitId}?days=${days}`,
       providesTags: ['EnergyRecord'],
     }),
+    getUserInvoices: build.query({
+      query: ({ status } = {}) => {
+        const qs = status && status !== 'ALL' ? `?status=${status}` : '';
+        return `/invoices/user/me${qs}`;
+      },
+      providesTags: ['Invoice'],
+    }),
+    getAllInvoices: build.query({
+      query: ({ status, userId } = {}) => {
+        const params = new URLSearchParams();
+        if (status && status !== 'ALL') params.append('status', status);
+        if (userId) params.append('userId', userId);
+        const qs = params.toString() ? `?${params.toString()}` : '';
+        return `/invoices${qs}`;
+      },
+      providesTags: ['Invoice'],
+    }),
+    getInvoiceById: build.query({
+      query: (id) => `/invoices/${id}`,
+      providesTags: ['Invoice'],
+    }),
+    createCheckoutSession: build.mutation({
+      query: (invoiceId) => ({
+        url: `/invoices/create-checkout-session`,
+        method: 'POST',
+        body: { invoiceId },
+      }),
+    }),
+    getSessionStatus: build.query({
+      query: (sessionId) => `/invoices/session-status?session_id=${sessionId}`,
+    }),
+    generateInvoice: build.mutation({
+      query: (data) => ({
+        url: `/invoices/generate`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Invoice'],
+    }),
   }),
 })
 
@@ -135,5 +174,11 @@ export const {
   useDeleteSolarUnitMutation,
   useGetWeatherQuery,
   useGetCapacityFactorQuery,
-  useGetPeakHoursQuery
+  useGetPeakHoursQuery,
+  useGetUserInvoicesQuery,
+  useGetAllInvoicesQuery,
+  useGetInvoiceByIdQuery,
+  useCreateCheckoutSessionMutation,
+  useGetSessionStatusQuery,
+  useGenerateInvoiceMutation
 } = api;

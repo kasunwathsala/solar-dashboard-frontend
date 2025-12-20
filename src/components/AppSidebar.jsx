@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router";
-import { Home, Inbox, Calendar, Search, Settings,LayoutDashboard,TriangleAlert,ChartSpline } from "lucide-react";
+import { Home, Inbox, Calendar, Search, Settings,LayoutDashboard,TriangleAlert,ChartSpline, Receipt } from "lucide-react";
+import { useGetUserInvoicesQuery } from "@/lib/redux/query";
 
 import {
   Sidebar,
@@ -21,6 +22,12 @@ const items = [
     icon: LayoutDashboard,
   },
   {
+    title: "Invoices",
+    url: "/dashboard/invoices",
+    icon: Receipt,
+    showBadge: true,
+  },
+  {
     title: "Anomalies",
     url: "/anomalies",
     icon: TriangleAlert,
@@ -34,6 +41,12 @@ const items = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const { data: invoices } = useGetUserInvoicesQuery({ status: "ALL" });
+  
+  // Count pending/overdue invoices for badge
+  const pendingCount = invoices 
+    ? invoices.filter(inv => inv.status === "PENDING" || inv.status === "OVERDUE").length 
+    : 0;
 
   return (
     <Sidebar>
@@ -61,6 +74,11 @@ export function AppSidebar() {
                   >
                     <item.icon className={`h-5 w-5 ${isActive ? "text-blue-600" : "text-gray-500"}`} />
                     <span className="text-base font-medium">{item.title}</span>
+                    {item.showBadge && pendingCount > 0 && (
+                      <span className="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        {pendingCount}
+                      </span>
+                    )}
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

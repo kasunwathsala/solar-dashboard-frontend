@@ -1,4 +1,4 @@
-import { Settings, Zap, LogOut } from "lucide-react";
+import { Settings, Zap, LogOut, Receipt } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useClerk, useUser } from "@clerk/clerk-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -21,6 +21,11 @@ const items = [
     title: "Solar Units",
     url: "/admin/solar-units",
     icon: <Zap className="w-8 h-8" size={32} />,
+  },
+  {
+    title: "Invoices",
+    url: "/admin/invoices",
+    icon: <Receipt className="w-8 h-8" size={32} />,
   },
   {
     title: "Settings",
