@@ -56,7 +56,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <div className="px-6 py-4">
           <a href="/" className="block">
-            <h2 className="text-xl font-bold hover:text-blue-600 cursor-pointer transition-colors">Aleora</h2>
+            <h2 className="text-xl font-bold hover:text-blue-600 cursor-pointer transition-colors">sunLeaf Energy</h2>
           </a>
         </div>
       </SidebarHeader>

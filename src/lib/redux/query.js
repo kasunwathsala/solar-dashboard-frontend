@@ -1,7 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// Use relative path so Vite proxy forwards requests to backend
-const baseUrl = "/api";
+// Use environment variable when provided (useful when running built app or
+// when backend is hosted remotely). Fall back to relative `/api` so Vite dev
+// server proxy works during local development.
+const envBackend = import.meta.env.VITE_BACKEND_URL;
+const baseUrl = envBackend ? `${envBackend.replace(/\/$/, '')}/api` : "/api";
 
 // Define a service using a base URL and expected endpoints
 export const api = createApi({
@@ -44,6 +47,12 @@ export const api = createApi({
       
       // Always set content type
       headers.set("Content-Type", "application/json");
+      if (typeof window !== 'undefined') {
+        // Helpful debug log to confirm which baseUrl is being used
+        // (Safe to leave in - can help during local troubleshooting)
+        // eslint-disable-next-line no-console
+        console.debug("API baseUrl:", baseUrl);
+      }
       return headers;
     } 
   }),
