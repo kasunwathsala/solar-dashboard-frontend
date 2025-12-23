@@ -1,3 +1,33 @@
+# sunLeaf Energy - Solar Dashboard 
+
+Real-time solar energy monitoring and management system with anomaly detection and billing integration.
+
+## 🚀 Live Deployment
+
+- **Frontend**: https://fed-4-front-end-wathsala.netlify.app
+- **Core Backend API**: https://fed-4-back-end-wathsala2.onrender.com
+- **Data API**: https://fed-4-backend-data-api-wathsala1.onrender.com
+
+## 📦 Repositories
+
+- **Frontend**: https://github.com/kasunwathsala/solar-dashboard-frontend
+- **Core Backend**: https://github.com/kasunwathsala/solar-dashboard-backend
+- **Data Backend**: https://github.com/kasunwathsala/solar-dashboard-data-api
+
+## 🛠️ Tech Stack
+
+**Frontend:** React, Vite, TailwindCSS, Recharts  
+**Backend:** Node.js, TypeScript, Express, PostgreSQL, Prisma  
+**Features:** Real-time monitoring, Anomaly detection, Stripe payments, Weather integration
+
+## 👤 Developer
+
+**Kasun Wathsala**  
+Solar Energy Dashboard System - 2025
+
+
+
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
