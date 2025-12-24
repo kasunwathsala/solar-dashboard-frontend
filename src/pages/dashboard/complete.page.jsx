@@ -24,22 +24,50 @@ export default function CompletePage() {
 
       try {
         const token = await getToken();
+        
+        if (!token) {
+          throw new Error("Authentication token not available");
+        }
+
         const response = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/api/invoices/session-status?session_id=${sessionId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
 
+        // Check content type before parsing
+        const contentType = response.headers.get("content-type");
+        
         if (!response.ok) {
-          throw new Error("Failed to fetch session status");
+          // Try to get error message from response
+          let errorMessage = "Failed to fetch session status";
+          
+          if (contentType && contentType.includes("application/json")) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+          } else {
+            // Got HTML instead of JSON (possibly error page or redirect)
+            const textResponse = await response.text();
+            console.error("Unexpected response:", textResponse.substring(0, 200));
+            errorMessage = `Server error (${response.status}): Expected JSON but got HTML`;
+          }
+          
+          throw new Error(errorMessage);
+        }
+
+        // Ensure we got JSON response
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Invalid response format from server");
         }
 
         const data = await response.json();
         setSessionData(data);
       } catch (err) {
+        console.error("Session status error:", err);
         setError(err.message);
       } finally {
         setLoading(false);
