@@ -25,6 +25,59 @@ const HomePage = () => {
         <div className="container mx-auto px-4 mt-12 mb-12 space-y-8">
           <WeatherWidget latitude={6.9271} longitude={79.8612} />
           <DataCard solarUnitId={solarUnit._id} />
+
+         
+
+          {/* Solar energy generation promotional / summary section (moved below widgets) */}
+          <section className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white/50 p-6 rounded-lg shadow-sm">
+            <div className="w-full h-72 md:h-96 rounded-2xl overflow-hidden">
+              <img src="/assets/images/i1.jpg" alt="solar & wind" className="w-full h-full object-cover" />
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Your Solar Energy Generation</h2>
+                <p className="mt-4 text-slate-600">This month, your solar panels generated <span className="font-medium text-sky-600">X kWh</span> of clean energy — helping you save on bills and reduce your carbon footprint. Track production trends and see how much power you contribute back to the grid.</p>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-28 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                  <img src="/assets/images/i2.jpg" alt="installation" className="w-full h-full object-cover" />
+                </div>
+                <div className="text-sm text-slate-700">
+                  <p className="font-semibold">Installation & Maintenance</p>
+                  <p className="mt-1">We provide easy setup, monitoring and scheduled checks to keep your system efficient.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+           {/* Problem / anomaly awareness section (placed before the Solar Generation promo) */}
+          <section className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white p-6 rounded-2xl">
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.723-1.36 3.488 0l5.516 9.803c.75 1.333-.213 2.998-1.744 2.998H4.485c-1.53 0-2.494-1.665-1.744-2.998L8.257 3.1zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-7a1 1 0 00-.993.883L9 7v4a1 1 0 001.993.117L11 11V7a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </span>
+                <span className="text-sm font-medium text-red-600">Problem</span>
+              </div>
+
+              <h3 className="text-2xl md:text-3xl font-bold text-slate-900">Home solar systems can face reduced efficiency and missed savings due to panel shading, dirt, unexpected drops in output, or inverter issues. Stay ahead with instant anomaly alerts.</h3>
+
+              <ul className="mt-4 space-y-3 text-slate-700">
+                <li className="flex items-start gap-3"><span className="text-red-500">›</span> Panel shading or dirt</li>
+                <li className="flex items-start gap-3"><span className="text-red-500">›</span> Unexpected drop in output</li>
+                <li className="flex items-start gap-3"><span className="text-red-500">›</span> Inverter errors</li>
+                <li className="flex items-start gap-3"><span className="text-red-500">›</span> Missed maintenance reminders</li>
+              </ul>
+            </div>
+
+            <div className="w-full h-80 md:h-[460px] rounded-2xl overflow-hidden">
+              <img src="/assets/images/i3.jpg" alt="anomaly warning" className="w-full h-full object-cover" />
+            </div>
+          </section>
         </div>
       )}
     </main>
