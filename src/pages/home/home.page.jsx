@@ -52,6 +52,8 @@ const HomePage = () => {
             </div>
           </section>
 
+          
+
            {/* Problem / anomaly awareness section (placed before the Solar Generation promo) */}
           <section className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white p-6 rounded-2xl">
             <div className="flex flex-col gap-6">
@@ -76,6 +78,24 @@ const HomePage = () => {
 
             <div className="w-full h-80 md:h-[460px] rounded-2xl overflow-hidden">
               <img src="/assets/images/i3.jpg" alt="anomaly warning" className="w-full h-full object-cover" />
+            </div>
+          </section>
+
+          {/* Feature / Solution section (using i4) */}
+          <section className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-gradient-to-r from-sky-400 to-sky-600 text-white p-8 rounded-2xl">
+            <div className="order-2 md:order-1 flex flex-col justify-center">
+              <span className="inline-block bg-lime-300 text-slate-900 px-3 py-1 rounded-full mb-4 font-semibold">⚡ Solution</span>
+              <h2 className="text-3xl md:text-4xl font-bold">The Solar Home Dashboard empowers you to monitor your solar panels, receive instant alerts for anomalies, and optimize your energy usage for maximum savings and peace of mind.</h2>
+              <ul className="mt-6 space-y-3 text-sky-100">
+                <li>› Real-time energy tracking</li>
+                <li>› Anomaly alerts</li>
+                <li>› Historical performance reports</li>
+                <li>› Remote diagnostics & support</li>
+              </ul>
+            </div>
+
+            <div className="order-1 md:order-2 w-full h-72 md:h-96 rounded-2xl overflow-hidden">
+              <img src="/assets/images/i4.jpg" alt="solution image" className="w-full h-full object-cover" />
             </div>
           </section>
         </div>
