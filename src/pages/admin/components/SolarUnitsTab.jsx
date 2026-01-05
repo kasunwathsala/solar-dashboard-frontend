@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useGetSolarUnitsQuery, useDeleteSolarUnitMutation } from "@/lib/redux/query";
-import { Zap, Trash2 } from "lucide-react";
+import { useGetSolarUnitsQuery, useDeleteSolarUnitMutation, useSyncUsersFromClerkMutation } from "@/lib/redux/query";
+import { Zap, Trash2, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
@@ -13,6 +13,7 @@ export function SolarUnitsTab() {
 
   const { data: solarUnits, isLoading: isLoadingSolarUnits, isError: isErrorSolarUnits, error: errorSolarUnits } = useGetSolarUnitsQuery();
   const [deleteSolarUnit, { isLoading: isDeleting }] = useDeleteSolarUnitMutation();
+  const [syncUsers, { isLoading: isSyncing }] = useSyncUsersFromClerkMutation();
 
   if (isLoadingSolarUnits) {
     return <div>Loading...</div>;
@@ -42,12 +43,34 @@ export function SolarUnitsTab() {
     }
   };
 
+  const handleSyncUsers = async () => {
+    if (window.confirm("Sync all users from Clerk? This will add any new users to the database.")) {
+      try {
+        const result = await syncUsers().unwrap();
+        alert(`User sync completed! Synced: ${result.synced}, Skipped: ${result.skipped}, Total: ${result.total}`);
+      } catch (error) {
+        console.error("Failed to sync users:", error);
+        alert("Failed to sync users. Please try again.");
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <Button asChild>
-          <Link to="/admin/solar-units/create">Add New Unit</Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild>
+            <Link to="/admin/solar-units/create">Add New Unit</Link>
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={handleSyncUsers}
+            disabled={isSyncing}
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
+            {isSyncing ? "Syncing..." : "Sync Users from Clerk"}
+          </Button>
+        </div>
       </div>
 
       <div className="w-full max-w-md">

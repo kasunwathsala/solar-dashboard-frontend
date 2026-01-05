@@ -115,6 +115,13 @@ export const api = createApi({
       query: () => `/users`,
       providesTags: ['User'],
     }),
+    syncUsersFromClerk: build.mutation({
+      query: () => ({
+        url: `/users/sync`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
+    }),
     getWeather: build.query({
       query: ({ lat, lon }) => `/weather?lat=${lat}&lon=${lon}`,
     }),
@@ -172,6 +179,7 @@ export const api = createApi({
 // auto-generated based on the defined endpoints
 export const { 
   useGetAllUsersQuery, 
+  useSyncUsersFromClerkMutation,
   useGetEnergyGenerationRecordsBySolarUnitIdQuery,
   useGetEnergyGenerationRecordsBySolarUnitQuery, 
   useGetSolarUnitByClerkUserIdQuery,
