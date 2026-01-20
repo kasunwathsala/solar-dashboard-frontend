@@ -94,7 +94,7 @@ export default function PaymentPage() {
             <div className="flex justify-between">
               <span className="text-gray-600 dark:text-gray-400">Rate per kWh:</span>
               <span className="font-medium text-gray-900 dark:text-white">
-                ${invoice.ratePerKwh.toFixed(2)}
+                ${(invoice.ratePerKwh / 100).toFixed(2)}
               </span>
             </div>
             
@@ -104,7 +104,7 @@ export default function PaymentPage() {
                   Total Amount:
                 </span>
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  ${invoice.totalAmount.toFixed(2)}
+                  ${(invoice.totalAmount / 100).toFixed(2)}
                 </span>
               </div>
             </div>

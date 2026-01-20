@@ -9,6 +9,7 @@ import AnomaliesPage from "./pages/dashboard/anomalies.page.jsx";
 import InvoicesPage from "./pages/dashboard/invoices.page.jsx";
 import PaymentPage from "./pages/dashboard/payment.page.jsx";
 import CompletePage from "./pages/dashboard/complete.page.jsx";
+import AnalyticsPage from "./pages/dashboard/analytics.page.jsx";
 
 import RootLayout from "./layouts/root.layout.jsx";
 import MainLayout from "./layouts/main.layout.jsx";
@@ -58,6 +59,7 @@ createRoot(document.getElementById("root")).render(
                   <Route path="/dashboard/invoices/payment/:invoiceId" element={<PaymentPage />} />
                   <Route path="/dashboard/invoices/complete" element={<CompletePage />} />
                   <Route path="/dashboard/anomalies" element={<AnomaliesPage />} />
+                  <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
                 </Route>
                 
                 <Route element={<AuthorizedLayout />}>
