@@ -53,7 +53,7 @@ export default function HeroSection() {
                 <span className="bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">Solar Energy</span>
                 <div className="relative">
                   <img
-                    src="/images/ddd.jpg"
+                    src="/ddd.jpg"
                     alt="Solar panels on a house roof"
                     className="max-h-8 rounded-xl object-cover sm:max-h-16 md:max-h-20 md:rounded-2xl shadow-lg"
                   />
