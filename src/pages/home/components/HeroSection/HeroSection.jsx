@@ -1,6 +1,18 @@
 import { Sailboat, Shield, Triangle, Wind } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 export default function HeroSection() {
+  const { isSignedIn, isLoaded } = useUser();
+
+  // Don't show hero section if user is signed in
+  if (!isLoaded) {
+    return null; // or a loading skeleton if preferred
+  }
+
+  if (isSignedIn) {
+    return null; // Hide hero section for logged-in users
+  }
+
   return (
     <div className="bg-background px-12 font-[Inter] transition-colors">
       {/* Navigation Bar */}
