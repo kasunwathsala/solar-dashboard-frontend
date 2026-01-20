@@ -1,6 +1,8 @@
 import { Sailboat, Shield, Triangle, Wind } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 export default function HeroSection() {
+  const { isSignedIn } = useUser();
   return (
     <div className="bg-background px-12 font-[Inter] transition-colors">
       {/* Navigation Bar */}
@@ -70,21 +72,23 @@ export default function HeroSection() {
               </div>
             </h1>
             
-            {/* CTA Buttons */}
-            <div className="mt-8 md:mt-12 flex flex-col sm:flex-row gap-4">
-              <a 
-                href="/sign-up" 
-                className="px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all text-center"
-              >
-                Get Started Free
-              </a>
-              <a 
-                href="/sign-in" 
-                className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all text-center"
-              >
-                Sign In
-              </a>
-            </div>
+            {/* CTA Buttons - Only show when user is not logged in */}
+            {!isSignedIn && (
+              <div className="mt-8 md:mt-12 flex flex-col sm:flex-row gap-4">
+                <a 
+                  href="/sign-up" 
+                  className="px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all text-center"
+                >
+                  Get Started Free
+                </a>
+                <a 
+                  href="/sign-in" 
+                  className="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-600 rounded-xl font-semibold text-lg hover:shadow-xl hover:scale-105 transition-all text-center"
+                >
+                  Sign In
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </main>
